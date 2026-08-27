@@ -23,7 +23,11 @@ __pycache__/
 .env
 .venv/
 env/
-models/saved/
+ml-engine/.venv/
+ml-engine/data/*.csv
+ml-engine/models/*.pkl
+data/
+models/
 *.h5
 *.keras
 
