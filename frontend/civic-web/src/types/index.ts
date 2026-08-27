@@ -165,3 +165,56 @@ export interface PagedResult<T> {
   pageSize: number;
   totalPages: number;
 }
+
+export interface WardHealthMetric {
+  ward: string;
+  civicHealthIndex: number;
+  grade: string;
+  slaComplianceRate: number;
+  citizenRating: number;
+  infraAgeYears: number;
+  populationDensity: number;
+  totalIncidentsRecorded: number;
+  riskLevel: 'Low' | 'Moderate' | 'High';
+}
+
+export interface CivicHealthResponse {
+  city: string;
+  overallCityCivicHealthIndex: number;
+  overallSlaCompliance: number;
+  averageCitizenSatisfaction: number;
+  activeWardsMonitored: number;
+  wardHealthBreakdown: WardHealthMetric[];
+}
+
+export interface DailyForecastPoint {
+  date: string;
+  dayOfWeek: string;
+  predictedIncidents: number;
+  isWeekend: boolean;
+  weatherRiskLevel: string;
+}
+
+export interface WardForecastResponse {
+  ward: string;
+  departmentCode?: string;
+  forecastHorizonDays: number;
+  totalPredictedIncidents: number;
+  dailyForecast: DailyForecastPoint[];
+  historicalSlaComplianceRate: number;
+  recommendedFieldWorkers: number;
+}
+
+export interface IncidentCluster {
+  clusterId: string;
+  incidentCount: number;
+  primaryCategory: string;
+  ward: string;
+  centerLatitude: number;
+  centerLongitude: number;
+  radiusMeters: number;
+  incidentReferenceNumbers: string[];
+  severityAssessment: string;
+  recommendedAction: string;
+}
+

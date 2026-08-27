@@ -10,9 +10,11 @@ import type {
 import { IncidentMap } from './components/IncidentMap';
 import { IssueDetailModal } from './components/IssueDetailModal';
 import { ReportIssueModal } from './components/ReportIssueModal';
+import { CivicIntelligenceView } from './components/CivicIntelligenceView';
 import { 
   Activity, 
   AlertTriangle, 
+  BrainCircuit, 
   Building2, 
   CheckCircle2, 
   Clock, 
@@ -28,7 +30,7 @@ export const App: React.FC = () => {
   const { user, switchPersona } = useAuth();
   
   // Navigation
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'issues' | 'departments'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'issues' | 'intelligence' | 'departments'>('dashboard');
 
   // Data State
   const [issues, setIssues] = useState<IssueSummary[]>([]);
@@ -142,6 +144,13 @@ export const App: React.FC = () => {
               style={{ fontSize: '0.8rem', padding: '6px 14px' }}
             >
               <Layers size={15} /> Issue Explorer ({issues.length})
+            </button>
+            <button 
+              className={`btn ${activeTab === 'intelligence' ? 'btn-primary' : 'btn-secondary'}`}
+              onClick={() => setActiveTab('intelligence')}
+              style={{ fontSize: '0.8rem', padding: '6px 14px' }}
+            >
+              <BrainCircuit size={15} /> Civic Intelligence
             </button>
             <button 
               className={`btn ${activeTab === 'departments' ? 'btn-primary' : 'btn-secondary'}`}
@@ -461,7 +470,12 @@ export const App: React.FC = () => {
           </div>
         )}
 
-        {/* Tab 3: Department Registry */}
+        {/* Tab 3: Civic Intelligence & Analytics */}
+        {activeTab === 'intelligence' && (
+          <CivicIntelligenceView />
+        )}
+
+        {/* Tab 4: Department Registry */}
         {activeTab === 'departments' && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '18px' }}>
             {departments.map((dept) => (
