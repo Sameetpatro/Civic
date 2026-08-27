@@ -1,0 +1,32 @@
+## .NET / Visual Studio
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+appsettings.Development.json
+appsettings.Local.json
+.vscode/
+.idea/
+
+## Node / React
+node_modules/
+dist/
+build/
+.next/
+*.log
+
+## Python / ML
+__pycache__/
+*.pyc
+.env
+.venv/
+env/
+models/saved/
+*.h5
+*.keras
+
+## OS
+.DS_Store
+Thumbs.db
