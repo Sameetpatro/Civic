@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CivicFix.Api/CivicFix.Api.csproj" />
+    <Project Path="src/CivicFix.Application/CivicFix.Application.csproj" />
+    <Project Path="src/CivicFix.Domain/CivicFix.Domain.csproj" />
+    <Project Path="src/CivicFix.Infrastructure/CivicFix.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CivicFix.Tests/CivicFix.Tests.csproj" />
+  </Folder>
+</Solution>
