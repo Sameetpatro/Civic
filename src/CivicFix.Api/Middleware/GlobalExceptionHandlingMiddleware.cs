@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Text.Json;
-
 namespace CivicFix.Api.Middleware;
-
 public class GlobalExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;
