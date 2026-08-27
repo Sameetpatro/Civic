@@ -1,3 +1,4 @@
+using CivicFix.Api.Hubs;
 using CivicFix.Api.Middleware;
 using CivicFix.Api.Services;
 using CivicFix.Application;
@@ -15,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 // 1. Add Layers and Core Dependencies
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationServices();
+builder.Services.AddSignalR();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
@@ -143,6 +145,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<IncidentDispatchHub>("/hubs/dispatch");
 
 app.Run();
 
