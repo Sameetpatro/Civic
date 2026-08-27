@@ -84,5 +84,30 @@ class TestCivicMlService(unittest.TestCase):
         self.assertIn("isAnomaly", data)
         self.assertIn("anomalyScore", data)
 
+    def test_civic_health_index(self):
+        response = self.client.get("/intelligence/civic-health")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn("overallCityCivicHealthIndex", data)
+        self.assertGreater(data["overallCityCivicHealthIndex"], 0)
+        self.assertIn("wardHealthBreakdown", data)
+
+    def test_spatial_clustering_detection(self):
+        # 3 nearby points in Sector 14
+        payload = {
+            "incidents": [
+                {"referenceNumber": "CVX-001", "latitude": 28.9931, "longitude": 77.0151, "categoryName": "Water Leak", "wardSector": "Sector 14"},
+                {"referenceNumber": "CVX-002", "latitude": 28.9933, "longitude": 77.0152, "categoryName": "Water Leak", "wardSector": "Sector 14"},
+                {"referenceNumber": "CVX-003", "latitude": 28.9932, "longitude": 77.0150, "categoryName": "Water Leak", "wardSector": "Sector 14"},
+                {"referenceNumber": "CVX-004", "latitude": 29.0500, "longitude": 77.1000, "categoryName": "Pothole", "wardSector": "Outer"}
+            ],
+            "radiusKm": 0.5,
+            "minClusterSize": 2
+        }
+        response = self.client.post("/intelligence/clusters", json=payload)
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertGreaterEqual(data["totalClustersDetected"], 1)
+
 if __name__ == "__main__":
     unittest.main()

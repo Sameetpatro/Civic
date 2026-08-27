@@ -304,6 +304,32 @@ def check_anomaly(request: AnomalyCheckRequest):
         recommendedAction="Deploy emergency field inspection task force immediately." if is_anomaly else "Standard operational dispatch."
     )
 
+# ----------------- Civic Intelligence & Analytics Endpoints -----------------
+@app.get("/intelligence/civic-health")
+def get_civic_health():
+    """Returns composite Civic Health Index scores (0-100) and ward vulnerability breakdowns."""
+    from services.intelligence_service import intelligence_engine
+    return intelligence_engine.get_city_and_ward_health()
+
+class SpatialClusteringRequest(BaseModel):
+    incidents: List[Dict[str, Any]]
+    radiusKm: Optional[float] = 0.4
+    minClusterSize: Optional[int] = 2
+
+@app.post("/intelligence/clusters")
+def detect_clusters(request: SpatialClusteringRequest):
+    """Executes DBSCAN spatial clustering to detect grouped infrastructure failures or complaint bursts."""
+    from services.intelligence_service import intelligence_engine
+    clusters = intelligence_engine.detect_spatial_clusters(
+        request.incidents, 
+        eps_km=request.radiusKm or 0.4, 
+        min_samples=request.minClusterSize or 2
+    )
+    return {
+        "totalClustersDetected": len(clusters),
+        "clusters": clusters
+    }
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
