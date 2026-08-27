@@ -138,22 +138,46 @@ npm run dev
 
 ---
 
-### 3. Run the Mobile App (React Native / Expo)
+### Option A: Run Everything via Docker Compose
+```bash
+docker compose up --build
+```
+- 🌐 **Web Portal**: [http://localhost:5173](http://localhost:5173)
+- 🌐 **Backend API Swagger**: [http://localhost:5000/swagger](http://localhost:5000/swagger)
+- 🌐 **ML Microservice Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
 
+---
+
+### Option B: Run Services Locally
+
+#### 1. Backend API (.NET 10)
+```bash
+dotnet run --project src/CivicFix.Api/CivicFix.Api.csproj
+```
+- 🌐 **Swagger Documentation**: [http://localhost:5000/swagger](http://localhost:5000/swagger)
+
+#### 2. React Web Command Portal
+```bash
+cd frontend/civic-web
+npm install
+npm run dev
+```
+- 🌐 **Web Operations Command Portal**: [http://localhost:5173](http://localhost:5173)
+
+#### 3. Mobile App (React Native / Expo)
 ```bash
 cd mobile/civic-app
 npm install
 npx expo start
 ```
 
----
-
-### 4. Run the Python ML Engine
-
+#### 4. Python ML & Civic Intelligence Engine
 ```bash
 cd ml-engine
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-python generate_data.py
+python train_models.py
 python app.py
 ```
 - 🌐 **ML Microservice API**: [http://localhost:8000/docs](http://localhost:8000/docs)
@@ -162,14 +186,28 @@ python app.py
 
 ## 🧪 Automated Testing
 
-Run the comprehensive unit and integration test suite:
-
+### Backend Unit & Integration Tests (.NET 10)
 ```bash
 dotnet test
 ```
-
 ```text
-Passed!  - Failed: 0, Passed: 11, Skipped: 0, Total: 11, Duration: 1 s - CivicFix.Tests.dll (net10.0)
+Passed!  - Failed: 0, Passed: 15, Skipped: 0, Total: 15, Duration: 1 s - CivicFix.Tests.dll (net10.0)
+```
+
+### Python ML Engine Unit Tests
+```bash
+PYTHONPATH=ml-engine python -m unittest ml-engine/test_ml_service.py
+```
+```text
+Ran 8 tests in 0.84s - OK
+```
+
+### React Web Production Bundle
+```bash
+cd frontend/civic-web && npm run build
+```
+```text
+✓ built in 121ms
 ```
 
 ---
