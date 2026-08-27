@@ -128,6 +128,7 @@ using (var scope = app.Services.CreateScope())
 
 // 7. Configure HTTP Request Pipeline
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+app.UseMiddleware<RateLimitingMiddleware>();
 
 if (app.Environment.IsDevelopment() || true) // Enable Swagger in all dev/test modes
 {

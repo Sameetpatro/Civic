@@ -16,6 +16,7 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IIssueService, IssueService>();
         services.AddScoped<IDepartmentService, DepartmentService>();
+        services.AddSingleton<CivicFix.Application.Common.Security.IPiiRedactionService, CivicFix.Application.Common.Security.PiiRedactionService>();
 
         return services;
     }
