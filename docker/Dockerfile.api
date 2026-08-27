@@ -1,0 +1,29 @@
+# Build Stage
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+WORKDIR /app
+
+# Copy solution and project definitions
+COPY CivicFix.slnx ./
+COPY src/CivicFix.Domain/CivicFix.Domain.csproj src/CivicFix.Domain/
+COPY src/CivicFix.Application/CivicFix.Application.csproj src/CivicFix.Application/
+COPY src/CivicFix.Infrastructure/CivicFix.Infrastructure.csproj src/CivicFix.Infrastructure/
+COPY src/CivicFix.Api/CivicFix.Api.csproj src/CivicFix.Api/
+COPY tests/CivicFix.Tests/CivicFix.Tests.csproj tests/CivicFix.Tests/
+
+# Restore dependencies
+RUN dotnet restore src/CivicFix.Api/CivicFix.Api.csproj
+
+# Copy full source and publish
+COPY src/ src/
+RUN dotnet publish src/CivicFix.Api/CivicFix.Api.csproj -c Release -o /app/publish /p:UseAppHost=false
+
+# Runtime Stage
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/publish .
+
+ENV ASPNETCORE_URLS=http://+:5000
+ENV ASPNETCORE_ENVIRONMENT=Production
+EXPOSE 5000
+
+ENTRYPOINT ["dotnet", "CivicFix.Api.dll"]

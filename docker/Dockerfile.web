@@ -1,0 +1,17 @@
+# Build Stage
+FROM node:20-alpine AS build
+WORKDIR /app
+
+COPY frontend/civic-web/package*.json ./
+RUN npm ci
+
+COPY frontend/civic-web/ ./
+RUN npm run build
+
+# Runtime Stage with Nginx
+FROM nginx:alpine AS runtime
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Expose HTTP
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

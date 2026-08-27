@@ -1,0 +1,73 @@
+name: CivicFix CI/CD Quality Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  backend-test:
+    name: Build & Test .NET 10 API
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK 10.0
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore src/CivicFix.Api/CivicFix.Api.csproj
+
+      - name: Build backend
+        run: dotnet build src/CivicFix.Api/CivicFix.Api.csproj --no-restore -c Release
+
+      - name: Run automated test suites
+        run: dotnet test tests/CivicFix.Tests/CivicFix.Tests.csproj --verbosity normal
+
+  frontend-build:
+    name: Build & Validate React Web Portal
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: frontend/civic-web/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend/civic-web
+        run: npm ci
+
+      - name: TypeScript Build
+        working-directory: frontend/civic-web
+        run: npm run build
+
+  ml-engine-test:
+    name: Test Python ML Microservice
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r ml-engine/requirements.txt
+
+      - name: Train Models & Verify
+        run: python ml-engine/train_models.py
+
+      - name: Run ML Unit Tests
+        run: PYTHONPATH=ml-engine python -m unittest ml-engine/test_ml_service.py
